@@ -16,7 +16,7 @@ class Summoner extends DefaultCli{
 	}
 
 	byId (id){  
-		return this.get(id, this)
+		return this.get(id)
 	}
 
 	nameById (id){  

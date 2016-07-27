@@ -11,8 +11,8 @@ class MatchList extends DefaultCli{
 		super(key, ROOT, API_VERSION)
 	}
 
-	bySummoner (id){
-		return this.get(`by-summoner/${id}`)
+	bySummoner (id, query){
+		return this.get(`by-summoner/${id}`, query)
 	}
 
 }
