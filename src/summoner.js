@@ -5,11 +5,6 @@ var DefaultCli = require('./default')
 const API_VERSION = 'v1.4'
 const ROOT = 'summoner'
 
-function byParam(param, self){
-	var options = self.getOptions(param);
-	return self.get(options)
-}
-
 class Summoner extends DefaultCli{
 
 	constructor(key){
@@ -17,19 +12,19 @@ class Summoner extends DefaultCli{
 	}
 
 	byName (name){
-		return byParam(`by-name/${name}`, this)
+		return this.get(`by-name/${name}`)
 	}
 
 	byId (id){  
-		return byParam(id, this)
+		return this.get(id, this)
 	}
 
 	nameById (id){  
-		return byParam(`${id}/name`, this)
+		return this.get(`${id}/name`)
 	}
 
 	runesById (id){  
-		return byParam(`${id}/runes`, this)
+		return this.get(`${id}/runes`)
 	}
 }
 

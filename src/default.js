@@ -10,50 +10,33 @@ const client = restify.createJsonClient({
 	url: "https://br.api.pvp.net"
 })
 
+
 class DefaultCli {
 
-	constructor(key, root, api_version){
-		this.key = key
-		this.root = root
-		this.api_version = api_version
+	constructor(key, root, api_version, locale){
+		this._key = key
+		this._root = root
+		this._api_version = api_version
+		this._locale = locale || 'br'
 	}
 
-	get(options, cb) {
-		if(!options.query) options.query = {}
-		options.query.api_key = this.key;
+	get(url, query) {
+		if(!query) query = {}
+		query.api_key = this._key
 
-		var locale = options.locale || 'br'
-		var version = options.version || '1'
-		var query = qs.stringify(options.query)
-		var uri = `${API_ROOT}/${locale}/${version}/${options.url}?${query}`
+		var query = qs.stringify(query)
+		var uri = `${API_ROOT}/${this._locale}/${this._api_version}/${this._root}/${url}?${query}`
 
 		return rx.Observable.create(observer =>{ 
 			client.get(uri, (err,req,res,body) => {
-				if(err) observer.onError(err) 
-				observer.onNext(body)
+				if(err) observer.onError(err)
+				if(!err) observer.onNext(body)
 				observer.onCompleted()
 			})
 		})
 		
 	}
 
-	getOptions(url){
-		var self = this;
-		return {
-			get version(){
-				return self.api_version
-			},
-			uri: url,
-			get url(){
-				return `${self.root}/${this.uri}`
-			},
-			set url(uri){
-				this.uri = uri
-			}
-		}
-	}
 }
 
-
 module.exports = DefaultCli
-
