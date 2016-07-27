@@ -17,6 +17,26 @@ class StaticData extends DefaultCli{
 		return this.get(`champion`)
 	}
 
+	championById(id){
+		return this.get(`champion/${id}`)
+	}
+
+	item(){
+		return this.get(`item`)
+	}
+
+	itemById(id){
+		return this.get(`item/${id}`)
+	}
+
+	languageStrings(){
+		return this.get(`language-strings`)
+	}
+
+	languages(){
+		return this.get(`languages`)
+	}
+
 }
 
 module.exports = StaticData
