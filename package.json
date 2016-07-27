@@ -1,0 +1,35 @@
+{
+  "name": "leagueofnode",
+  "version": "0.1.0",
+  "description": "league of legends js client",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fabiomaciel/leagueofnode.git"
+  },
+  "keywords": [
+    "league",
+    "legends",
+    "lol",
+    "lolcli",
+    "cli",
+    "loljs",
+    "lolnode",
+    "node",
+    "nodejs",
+    "js"
+  ],
+  "author": "Fabio Maciel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fabiomaciel/leagueofnode/issues"
+  },
+  "homepage": "https://github.com/fabiomaciel/leagueofnode#readme",
+  "dependencies": {
+    "querystring": "^0.2.0",
+    "restify": "^4.1.1"
+  }
+}
