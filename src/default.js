@@ -1,6 +1,7 @@
 'use strict'
 
-const restify = require('restify'),
+const rx = require('rx'), 
+	restify = require('restify'),
 	qs = require('querystring')
 
 const API_ROOT = '/api/lol'
@@ -22,32 +23,33 @@ class DefaultCli {
 		options.query.api_key = this.key;
 
 		var locale = options.locale || 'br'
-			var version = options.version || '1'
+		var version = options.version || '1'
+		var query = qs.stringify(options.query)
+		var uri = `${API_ROOT}/${locale}/${version}/${options.url}?${query}`
 
-			var query = qs.stringify(options.query)
-
-			var uri = `${API_ROOT}/${locale}/${version}/${options.url}?${query}`
-			console.log(uri);
-
-		var promise = new Promise(function(resolve, reject){
-			client.get(uri, (a,b,c,d)=>{ resolve(cb(a,b,c,d)); })
+		return rx.Observable.create(observer =>{ 
+			client.get(uri, (err,req,res,body) => {
+				if(err) observer.onError(err) 
+				observer.onNext(body)
+				observer.onCompleted()
+			})
 		})
-
-		return promise;
-
+		
 	}
 
 	getOptions(url){
 		var self = this;
 		return {
-			get version(){return self.api_version},
+			get version(){
+				return self.api_version
+			},
 			uri: url,
 			get url(){
 				return `${self.root}/${this.uri}`
 			},
-				set url(uri){
-					this.uri = uri
-				}
+			set url(uri){
+				this.uri = uri
+			}
 		}
 	}
 }
