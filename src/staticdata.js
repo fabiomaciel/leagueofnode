@@ -37,6 +37,43 @@ class StaticData extends DefaultCli{
 		return this.get(`languages`)
 	}
 
+	map(){
+		return this.get(`map`)
+	}
+
+	mastery(){
+		return this.get(`mastery`)
+	}
+
+	masteryById(id){
+		return this.get(`mastery/${id}`)
+	}
+
+	realm(){
+		return this.get(`realm`)
+	}
+
+	rune(){
+		return this.get(`rune`)
+	}
+
+	runeById(id){
+		return this.get(`rune/${id}`)
+	}
+
+	summonerSpell(){
+		return this.get(`summoner-spell`)
+	}
+
+	summonerSpellById(id){
+		return this.get(`summoner-spell/${id}`)
+	}
+
+	versions(){
+		return this.get(`versions`)
+	}
+	
+
 }
 
 module.exports = StaticData
