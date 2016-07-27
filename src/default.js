@@ -18,6 +18,22 @@ class DefaultCli {
 		this._root = root
 		this._api_version = api_version
 		this._locale = locale || 'br'
+		this._prefix = ''
+	}
+
+	get prefix(){
+		if(this._prefix)
+			return `${this._prefix}/`
+		return ''
+	}
+	set prefix(value){
+		this._prefix = value
+	}
+
+	get root(){
+		if(this._root)
+			return `${this._root}/`
+		return ''
 	}
 
 	get(url, query) {
@@ -25,8 +41,9 @@ class DefaultCli {
 		query.api_key = this._key
 
 		var query = qs.stringify(query)
-		var uri = `${API_ROOT}/${this._locale}/${this._api_version}/${this._root}/${url}?${query}`
+		var uri = `${API_ROOT}/${this.prefix}${this._locale}/${this._api_version}/${this.root}${url}?${query}`
 
+		console.log(uri)
 		return rx.Observable.create(observer => { 
 			client.get(uri, (err,req,res,body) => {
 				if(err) observer.onError(err)
