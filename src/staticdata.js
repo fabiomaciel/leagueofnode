@@ -1,6 +1,6 @@
 'use strict'
 
-var DefaultCli = require('./default')
+const DefaultCli = require('./default')
 
 const API_VERSION = 'v1.2'
 const ROOT = null
@@ -8,8 +8,8 @@ const PREFIX = 'static-data'
 
 class StaticData extends DefaultCli{
 
-	constructor(key){
-		super(key, ROOT, API_VERSION)
+	constructor(key, locale){
+		super(key, ROOT, API_VERSION, locale)
 		this.prefix = PREFIX 
 	}
 
@@ -65,7 +65,7 @@ class StaticData extends DefaultCli{
 		return this.get(`summoner-spell`)
 	}
 
-	summonerSpellById(id){
+	summonerSpellById(){
 		return this.get(`summoner-spell/${id}`)
 	}
 

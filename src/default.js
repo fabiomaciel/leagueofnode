@@ -43,7 +43,6 @@ class DefaultCli {
 		var query = qs.stringify(query)
 		var uri = `${API_ROOT}/${this.prefix}${this._locale}/${this._api_version}/${this.root}${url}?${query}`
 
-		console.log(uri)
 		return rx.Observable.create(observer => { 
 			client.get(uri, (err,req,res,body) => {
 				if(err) observer.onError(err)

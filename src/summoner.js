@@ -1,14 +1,14 @@
 'use strict'
 
-var DefaultCli = require('./default')
+const DefaultCli = require('./default')
 
 const API_VERSION = 'v1.4'
 const ROOT = 'summoner'
 
 class Summoner extends DefaultCli{
 
-	constructor(key){
-		super(key, ROOT, API_VERSION)
+	constructor(key, locale){
+		super(key, ROOT, API_VERSION, locale)
 	}
 
 	byName (name){
