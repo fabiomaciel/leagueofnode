@@ -6,10 +6,11 @@ const Summoner = require('./src/summoner'),
       Champion = require('./src/champion'),
       StaticData = require('./src/staticdata')
 
+const regions = require('./src/regions')
+
 class LeagueOfNode{
     constructor(key){
-        ['BR', 'EUNE', 'EUW', 'JP', 'KR', 'LAN', 'LAS', 'NA', 'OCE', 'RU', 'TR']
-            .forEach(e => {
+        regions.forEach(e => {
                 e = e.toLowerCase()
                 this[e] = {}
                 this[e].summoner = new Summoner(key, e)
