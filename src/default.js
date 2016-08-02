@@ -1,7 +1,6 @@
 'use strict'
 
-const rx = require('rx'), 
-	restify = require('restify'),
+const restify = require('restify'),
 	qs = require('querystring')
 const regions = require('./regions')	
 

@@ -1,7 +1,6 @@
 'use strict'
 
-const rx = require('rx'),
-	async = require('./util/async'),
+const async = require('./util/async'),
 	wait = require('./util/wait')
 
 const DefaultCli = require('./default'),
