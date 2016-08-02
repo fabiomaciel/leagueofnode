@@ -1,6 +1,9 @@
 'use strict'
 
-const rx = require('rx')
+const rx = require('rx'),
+	async = require('./util/async'),
+	wait = require('./util/wait')
+
 const DefaultCli = require('./default'),
 	  MatchList = require('./matchlist'),
 	  Match = require('./match'),
@@ -34,71 +37,56 @@ class Summoner extends DefaultCli{
 		return this.get(`${id}/runes`)
 	}
 
-	lastMatchById(id){
-		return this._matchlist.bySummoner(id, {
-				beginIndex:0, endIndex: 1
-			})
+	lastMatchByName(name){
+		return this.byName(name).then(s => {
+			return this.lastMatchById(s[name.replace(/ /g, '')].id)
+		})
 	}
 
-	lastMatchByname(name){
-		let lastMatch = this.byName(name).flatMap(e =>
-			this.lastMatchById(e[name.replace(/ /g, '')].id)
-		)
-		
-		let match = lastMatch.flatMap(e =>
-			this._match.byId(e.matches[0].matchId)
-		)
-
-		let lolchampions = this._static.champion().map(obj2arr)
-		let lolrunes = this._static.rune().map(obj2arr)
-		let lolmasteries = this._static.mastery().map(obj2arr)
-		let lolspells = this._static.summonerSpell().map(obj2arr) 
-
-		let participants = match.map(e => e.participants )
-		.flatMap(e => e)
-		.flatMap(p => lolchampions.map(c => {
-			p.champion = c[p.championId]
-			return p
-		})).flatMap(p =>
-			lolrunes.map(r => {
-				p.runes = p.runes.map(pr => {
-					pr.rune = r[pr.runeId]
-					return pr
+	lastMatchById(id, timeline){
+		let self = this
+		return new Promise(function(resolve){
+			async(function *(){
+				yield wait(200)
+				let lastmatch = yield self._matchlist.bySummoner(id, {
+					beginIndex:0, endIndex: 1
 				})
-				return p
-			})
-		).flatMap(p =>
-			lolmasteries.map(m => {
-				p.masteries = p.masteries.map(pm => {
-					pm.mastery = m[pm.masteryId]
-					return pm
+				yield wait(200)
+				let match = yield self._match.byId(lastmatch.matches[0].matchId, timeline)
+
+				let lolchampions = yield self._static.champion().toArray()
+				let lolrunes = yield self._static.rune().toArray()
+				let lolmasteries = yield self._static.mastery().toArray()
+				let lolspells = yield self._static.summonerSpell().toArray()
+
+				let participants = match.participants.map(p => {
+					p.champion = lolchampions[p.championId]
+
+					p.runes = p.runes.map(rune => {
+						rune.rune = lolrunes[rune.runeId]
+						return rune
+					})
+
+					p.masteries = p.masteries.map(mastery => {
+						mastery.mastery = lolmasteries[mastery.masteryId]
+						return mastery
+					})
+
+					p.spell1 = lolspells[p.spell1Id]
+					p.spell2 = lolspells[p.spell2Id]
+
+					return p
 				})
-				return p
-			})
-		).flatMap(p => 
-			lolspells.map(s => {
-				p.spell1 = s[p.spell1Id]
-				p.spell2 = s[p.spell2Id]
-				return p
-			})
-		)
 
-		return participants
-			.toArray()
-			.zip(match, (p, m) => {
-				m.participants = p
-				return m
-			})
+				match.participants = participants
 
+				resolve(match)
+			})
+		})
 	}
+
 }
 
-function obj2arr(obj){
-	obj = obj.data
-	let arr = []
-	for(let o in obj) 
-		arr[obj[o].id] = obj[o]
-	return arr
-}
+
 
 module.exports = Summoner
