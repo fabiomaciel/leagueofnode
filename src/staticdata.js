@@ -76,4 +76,16 @@ class StaticData extends DefaultCli{
 
 }
 
+ Promise.prototype.toArray = function(){
+	return this.then(obj =>  obj2Array(obj))
+}
+
+function obj2Array(obj){
+	obj = obj.data
+	let arr = {}
+	for(let o in obj) 
+		arr[obj[o].id] = obj[o]
+	return arr
+}
+
 module.exports = StaticData
