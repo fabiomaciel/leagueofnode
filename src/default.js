@@ -3,12 +3,18 @@
 const rx = require('rx'), 
 	restify = require('restify'),
 	qs = require('querystring')
+const regions = require('./regions')	
 
 const API_ROOT = '/api/lol'
 
-const client = restify.createJsonClient({
-	url: "https://br.api.pvp.net"
+const clients = []
+regions.forEach(region => {
+	clients[region] = restify.createJsonClient({
+		url: `https://${region}.api.pvp.net`
+	})
 })
+
+var currentCli = 0 
 
 
 class DefaultCli {
@@ -43,16 +49,23 @@ class DefaultCli {
 		var query = qs.stringify(query)
 		var uri = `${API_ROOT}/${this.prefix}${this._locale}/${this._api_version}/${this.root}${url}?${query}`
 
-		return rx.Observable.create(observer => { 
-			client.get(uri, (err,req,res,body) => {
-				if(err) observer.onError(err)
-				if(!err) observer.onNext(body)
-				observer.onCompleted()
-			})
-		})
-		
+		function toCb(cb){
+			clients[this._locale].get(uri, cb)
+		}
+
+		return getAsPromise(uri, this)
 	}
 
 }
+
+function getAsPromise(uri, ctx){
+	return new Promise((resolve, reject) => { 
+		clients[ctx._locale].get(uri, (err,req,res,body) => {
+			if(err) reject(err)
+			if(!err) resolve(body)
+		})
+	})
+}
+
 
 module.exports = DefaultCli
