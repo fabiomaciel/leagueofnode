@@ -11,8 +11,8 @@ class Match extends DefaultCli{
 		super(key, ROOT, API_VERSION, locale)
 	}
 
-	byId (id){
-		return this.get(`${id}`)
+	byId (id, includeTimeline){
+		return this.get(`${id}`, {includeTimeline: includeTimeline})
 	}
 
 }
